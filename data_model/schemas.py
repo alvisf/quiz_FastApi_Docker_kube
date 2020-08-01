@@ -35,3 +35,14 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+
+# -------------------------------------------------------------------------------------------
+
+
+class QuestionBase(BaseModel):
+    question: str
+
+
+class OptionCreate(QuestionBase):
+    items: List[Item] = []

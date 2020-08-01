@@ -34,3 +34,14 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+
+    # -------------------------------------------------------------------------------------------
+
+def create_question(db: Session, user: schemas.UserCreate):
+    fake_hashed_password = user.password + "notreallyhashed"
+    db_user = models.Questions(question=user.email, option1=fake_hashed_password,option2="",option3="",option4="",answer="")
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user

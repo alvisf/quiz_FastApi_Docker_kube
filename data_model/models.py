@@ -24,3 +24,17 @@ class Item(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="items")
+
+        # -------------------------------------------------------------------------------------------
+
+class Questions(Base):
+    __tablename__ = "questions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    question = Column(String, unique=True, index=True)
+    option1 = Column(String)
+    option2 = Column(String)
+    option3 = Column(String)
+    option4 = Column(String)
+    answer = Column(String)
+
