@@ -25,16 +25,17 @@ class Item(Base):
 
     owner = relationship("User", back_populates="items")
 
-        # -------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------
 
-class Questions(Base):
+
+class Question(Base):
     __tablename__ = "questions"
 
     id = Column(Integer, primary_key=True, index=True)
-    question = Column(String, unique=True, index=True)
+    subject_name = Column(String)
+    question = Column(String)
     option1 = Column(String)
     option2 = Column(String)
     option3 = Column(String)
     option4 = Column(String)
-    answer = Column(String)
-
+    answer = Column(Integer)

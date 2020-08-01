@@ -40,9 +40,13 @@ class User(UserBase):
 # -------------------------------------------------------------------------------------------
 
 
-class QuestionBase(BaseModel):
+class QuestionsCreate(BaseModel):
+    id: int
+
+    subject_name: str
     question: str
-
-
-class OptionCreate(QuestionBase):
-    items: List[Item] = []
+    option1: str
+    option2: str
+    option3: str
+    option4: str
+    answer: int
