@@ -54,3 +54,5 @@ def create_question(db: Session, questions: schemas.QuestionsCreate):
     db.refresh(db_question)
     return db_question
 
+def get_questions(db: Session, subject_name: str):
+    return db.query(models.Question).filter(models.Question.subject_name == subject_name).all()

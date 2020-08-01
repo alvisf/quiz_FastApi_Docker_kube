@@ -68,39 +68,37 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 
 # ----------------------------------------------------------------------------------
-@app.get("/")
-def subject_question():
-    return [
-        {
-            "question": "While working with a web app, you might need to use various form controls such as text boxes, checkboxes, dropdowns, file uploads, or radio buttons in order to use HTML elements or third-party libraries for React, such as material-ui.",
-            "option1": "answer1",
-            "option2": "answer2",
-            "option3": "answer3",
-            "option4": "answer4",
-            "correctAnswer": "option2",
-        },
-        {
-            "question": "working with a web app, you might need to use various form controls such as text boxes, checkboxes, dropdowns, file uploads, or radio buttons in order to use HTML elements or third-party libraries for React, such as material-ui.",
-            "option1": "answer1",
-            "option2": "answer2",
-            "option3": "answer3",
-            "option4": "answer4",
-            "correctAnswer": "option2",
-        },
-    ]
+# @app.get("/")
+# def subject_question():
+#     return [
+#         {
+#             "question": "While working with a web app, you might need to use various form controls such as text boxes, checkboxes, dropdowns, file uploads, or radio buttons in order to use HTML elements or third-party libraries for React, such as material-ui.",
+#             "option1": "answer1",
+#             "option2": "answer2",
+#             "option3": "answer3",
+#             "option4": "answer4",
+#             "correctAnswer": "option2",
+#         },
+#         {
+#             "question": "working with a web app, you might need to use various form controls such as text boxes, checkboxes, dropdowns, file uploads, or radio buttons in order to use HTML elements or third-party libraries for React, such as material-ui.",
+#             "option1": "answer1",
+#             "option2": "answer2",
+#             "option3": "answer3",
+#             "option4": "answer4",
+#             "correctAnswer": "option2",
+#         },
+#     ]
 
 
 @app.post("/questions/")
 def create_question(question: schemas.QuestionsCreate, db: Session = Depends(get_db)):
-    # db_question = crud.create_question(
-    #     db,
-    #     subject_name=question.subject,
-    #     question=question.question,
-    #     option_one=question.option1,
-    #     option_two=question.option2,
-    #     option_three=question.option3,
-    #     option_four=question.option4,
-    #     answer=question.answer,
-    # )
-
     return crud.create_question(db=db, questions=question)
+
+
+@app.get("/testGen/{subject_name}")
+def mcq_test(subject_name:str,db: Session = Depends(get_db)):
+    db_questions = crud.get_questions(db=db, subject_name=subject_name)
+    # if db_questions is None:
+    #     raise HTTPException(status_code=404, detail="Question not found")
+
+    return db_questions
