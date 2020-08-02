@@ -43,10 +43,39 @@ class User(UserBase):
 class QuestionsCreate(BaseModel):
     id: int
 
-    subject_name: str
+    test_id: int
     question: str
     option1: str
     option2: str
     option3: str
     option4: str
     answer: int
+
+class Attendee(BaseModel):
+    id:int
+
+    attendee_name:str
+    entry_pass:str
+
+
+class Answers(BaseModel):
+    id:int
+
+    marksheet_id:int
+    questionTitle:str
+    answer:str
+    result:bool
+
+class MarkSheet(BaseModel):
+    id:int
+
+    attendee_id:int
+    test_id:int
+    total_marks:int
+    answers:List[Answers]=[]
+
+
+
+
+
+

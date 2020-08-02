@@ -6,10 +6,26 @@ from sqlalchemy.orm import Session
 from data_model import crud, models, schemas
 from data_model.database import SessionLocal, engine
 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+]
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["DELETE", "GET", "POST", "PUT"],
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")
@@ -95,10 +111,49 @@ def create_question(question: schemas.QuestionsCreate, db: Session = Depends(get
     return crud.create_question(db=db, questions=question)
 
 
-@app.get("/testGen/{subject_name}")
-def mcq_test(subject_name:str,db: Session = Depends(get_db)):
-    db_questions = crud.get_questions(db=db, subject_name=subject_name)
-    # if db_questions is None:
-    #     raise HTTPException(status_code=404, detail="Question not found")
+@app.get("/testGen/{test_id}")
+def mcq_test(test_id:str,db: Session = Depends(get_db)):
+    db_questions = crud.get_questions(db=db, test_id=test_id)
+    if db_questions is None:
+        raise HTTPException(status_code=404, detail="Question not found")
 
     return db_questions
+
+@app.post("/createAttendee/")
+def create_attendee(attendee: schemas.Attendee, db: Session = Depends(get_db)):
+    db_attendee = crud.create_attendee(db=db, attendees=attendee)
+    if db_attendee:
+        raise HTTPException(status_code=400, detail="Error")
+    return db_attendee
+
+
+    
+@app.post("/evaluate/", status_code=200)
+def create_report(marksheet: schemas.MarkSheet, db: Session = Depends(get_db)):
+    crud.create_marksheet(db=db,marksheet=marksheet)
+    for answer in marksheet.answers:
+        crud.create_answer(db=db,answer=answer)
+    return {"description":"Success"}
+
+
+
+# Allmarksheet
+
+@app.get("/attendee/marksheet/{attendee_id}/{test_id}/")
+def marksheet(test_id:int,attendee_id:int,db: Session = Depends(get_db)):
+    db_marksheet = crud.get_marksheet(db=db, test_id=test_id,attendee_id=attendee_id)
+    if db_marksheet is None:
+        raise HTTPException(status_code=404, detail="Mark Sheet not found")
+
+    return db_marksheet
+
+
+@app.get("/attendee/answersheet/{attendee_id}/{test_id}/")
+def answersheet(test_id:int,attendee_id:int,db: Session = Depends(get_db)):
+    marksheet_id = crud.get_marksheet_id(db=db, test_id=test_id,attendee_id=attendee_id)
+    db_answersheet = crud.get_answersheet(db=db,marksheet_id=marksheet_id)
+    
+    if db_answersheet is None:
+        raise HTTPException(status_code=404, detail="Answer Sheet not found")
+
+    return db_answersheet
