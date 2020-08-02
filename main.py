@@ -137,8 +137,6 @@ def create_report(marksheet: schemas.MarkSheet, db: Session = Depends(get_db)):
 
 
 
-# Allmarksheet
-
 @app.get("/attendee/marksheet/{attendee_id}/{test_id}/")
 def marksheet(test_id:int,attendee_id:int,db: Session = Depends(get_db)):
     db_marksheet = crud.get_marksheet(db=db, test_id=test_id,attendee_id=attendee_id)
@@ -157,3 +155,11 @@ def answersheet(test_id:int,attendee_id:int,db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Answer Sheet not found")
 
     return db_answersheet
+
+@app.get("/user/allMarksheet/{test_id}/")
+def all_marksheet(test_id:int,db: Session = Depends(get_db)):
+    all_marksheet = crud.get_all_marksheet(db=db, test_id=test_id)
+    if all_marksheet is None:
+        raise HTTPException(status_code=404, detail="Mark Sheet not found")
+
+    return all_marksheet

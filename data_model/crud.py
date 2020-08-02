@@ -89,3 +89,5 @@ def get_marksheet_id(db: Session, test_id: int, attendee_id: int):
 def get_answersheet(db: Session,marksheet_id: int):
     return db.query(models.Answers).filter(models.Answers.marksheet_id == marksheet_id).all()
 
+def get_all_marksheet(db: Session, test_id: int):
+    return db.query(models.MarkSheet).filter(models.MarkSheet.test_id == test_id).all()
